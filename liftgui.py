@@ -85,8 +85,6 @@ class lift:
                 self.button[0].add(since)            #下降按钮被按下
                 self.waiting_down[since].append(go)    #加入此层楼下降等候区
 
-        
-
     def run(self):
         self.now += self.direction
         if self.direction == 1:
@@ -127,9 +125,7 @@ class lift:
                     self.addpassenger(int(since),int(go))
                 except:
                     self.info += '小朋友不要乱按电梯\n'
-                curses.noecho()
-                
-                
+                curses.noecho()      
 
     def draw(self,screen):
         def cast(string):
