@@ -13,31 +13,34 @@ class manage:
     def __init__(self,lift_num,height):
         self.lifts=[lift(height) for i in range(lift_num)]    #初始化电梯列表
         self.padrow = lambda s: s + (26- len(s)) * ' '
-        self.info = '(w)乘坐 (q)退出 (任意键)运行\n'
+        self.info = '(w)乘坐 (q)退出 (任意键)运行\n-----   管理信息   -----\n'
         self.height = height
 
     def gui(self,stdscr):
         curses.use_default_colors()
+        curses.halfdelay(20)
         while 1:
             self.randompeople()
             for lift in self.lifts:
                 lift.run()
-                self.info += '----- 电梯分机信息 -----:\n'+lift.info
+                self.info += '----- 电梯分机信息 -----\n'+lift.info
                 lift.info = ''
             self.draw(stdscr)
-            #stdscr.nodelay(6)
             char = stdscr.getch()
             if char == ord('q'):
                 break
             if char == ord('w'):
                 self.ride(stdscr)
+                curses.halfdelay(20)
 
     def addchoose(self,since,go):
+        self.info += '有人乘坐电梯 %d -> %d\n'%(since , go)
         direction = 1 if go > since else -1    #方向
         prioritys = []
         for lift in self.lifts:
             prioritys.append(lift.priority(since,go,direction))
         self.lifts[prioritys.index(min(prioritys))].addpassenger(int(since),int(go)) #分配优先值最小的电梯给乘客
+        self.info += '分配最优电梯 第 %d 号电梯 进入等候区\n' % prioritys.index(min(prioritys))
 
     def randompeople(self):
         for i in range(random.randint(0,3)):
@@ -50,7 +53,6 @@ class manage:
             since = int(stdscr.getstr())
             stdscr.addstr('请输入目标楼层\n')
             go = int(stdscr.getstr())
-            self.info += '有人乘坐电梯 %d -> %d\n'%(since , go)
             self.addchoose(since,go)
         except:
             self.info += '小朋友不要乱按电梯\n'
@@ -74,7 +76,7 @@ class manage:
             draw_row(row)
         draw_hor_separator()
         cast(self.info)
-        self.info = '(w)乘坐 (q)退出 (任意键)运行\n'
+        self.info = '(w)乘坐 (q)退出 (任意键)运行\n-----   管理信息   -----\n'
 
     def main(self):
         curses.wrapper(self.gui)
