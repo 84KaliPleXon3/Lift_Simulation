@@ -151,15 +151,15 @@ class lift:
     def main(self):
         curses.wrapper(self.gui)
 
-new_lift = lift(10)
+new_lift = lift(8)
 
 new_lift.addpassenger(3,5)
 new_lift.addpassenger(3,5)
-new_lift.addpassenger(3,8)
+new_lift.addpassenger(3,7)
 new_lift.addpassenger(6,0)
 new_lift.addpassenger(4,1)
 new_lift.addpassenger(4,6)
-new_lift.addpassenger(5,8)
+new_lift.addpassenger(5,7)
 new_lift.main()
 
 
