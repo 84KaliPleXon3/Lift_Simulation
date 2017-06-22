@@ -109,23 +109,27 @@ class lift:
         else:
             return '|           |' + '*' * (len(self.waiting_down[floor]) + len(self.waiting_up[floor]))
 
-    def get_max_floor(self,since,direction):    #获取当前方向需要到达的最大楼层，取决于乘客目的地的最值
-        for floor in range(self.height)[::-direction]:   #楼层倒顺序
-            if self.target[floor]:
-                if (floor - self.now) * (floor - since):      #介于楼层之间
-                    return since            #返回最值为乘客等候区
-                else:
-                    return floor
-        return since    #表明电梯上没有乘客 也返回乘客等候区
+    def get_max_floor(self,since):    #获取当前方向需要到达的最大楼层，取决于乘客目的地的最值
+        for floor in range(self.height)[::-self.direction]:   #楼层倒顺序
+            if self.target[floor] or self.waiting_up[floor] or self.waiting_down[floor]: #有乘客上去 上方有人在等候
+                return floor     #返回最值
+        return -1    #表明电梯上没有乘客 返回-1 因为此时电梯在运动 如果上面的情况都没发生 就是发生了错误
                     
 
     def priority(self,since,go,direction):
         if self.direction == 0:
-            return abs(since -self.now)
+            return abs(since -self.now)  #电梯停留 也是最有决策 路程为两者之差
         if self.direction == direction:
             if self.direction * (since - self.now) > 0:     #最优决策，乘客可以很快乘坐
                 return abs(since -self.now)    #返回相差的楼层
             else:
-                return 2 * abs(self.get_max_floor(since,self.direction) - self.now) + abs(self.now - since) + random.randint(0,since)
+                return 2 * abs(self.get_max_floor(since) - self.now) + abs(self.now - since) + random.randint(0,since)
         else:
-            return 2 * abs(self.get_max_floor(since,self.direction) - self.now) + abs(self.now - since)
+            if (self.now - since) * self.direction > 0:    #乘客与电梯背对而行
+                return 2 * abs(self.get_max_floor(since) - self.now) + abs(self.now - since)
+            else:   #电梯与乘客相对而行
+                max_floor = self.get_max_floor(since)
+                if (max_floor - self.now) * (max_floor - since) < 0:  #最值位于电梯与乘客之间
+                    return abs(self.now - since)
+                else:
+                    return 2 * abs(self.get_max_floor(since) - since) + abs(self.now - since)

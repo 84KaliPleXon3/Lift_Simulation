@@ -18,7 +18,7 @@ class manage:
 
     def gui(self,stdscr):
         curses.use_default_colors()
-        curses.halfdelay(20)
+        curses.halfdelay(10)
         while 1:
             self.randompeople()
             for lift in self.lifts:
@@ -31,7 +31,7 @@ class manage:
                 break
             if char == ord('w'):
                 self.ride(stdscr)
-                curses.halfdelay(20)
+                curses.halfdelay(10)
 
     def addchoose(self,since,go):
         self.info += '有人乘坐电梯 %d -> %d\n'%(since , go)
