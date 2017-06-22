@@ -112,9 +112,17 @@ class lift:
     def get_max_floor(self,since):    #获取当前方向需要到达的最大楼层，取决于乘客目的地的最值
         for floor in range(self.height)[::-self.direction]:   #楼层倒顺序
             if self.target[floor] or self.waiting_up[floor] or self.waiting_down[floor]: #有乘客上去 上方有人在等候
-                return floor     #返回最值
+                return self.real_max(floor)    #返回最值
         return -1    #表明电梯上没有乘客 返回-1 因为此时电梯在运动 如果上面的情况都没发生 就是发生了错误
                     
+    def real_max(self,floor):
+        try:
+            if self.direction >0:
+                return max(max(max([self.waiting_up[i] for i in range(self.now,self.height)], key=lambda x: max(x) if x else -1))  ,floor) 
+            else:
+                return min(min(min([self.waiting_down[i] for i in range(self.now)], key=lambda x: min(x) if x else self.height)) ,floor) 
+        except:
+            return floor
 
     def priority(self,since,go,direction):
         if self.direction == 0:
