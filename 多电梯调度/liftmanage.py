@@ -82,5 +82,5 @@ class manage:
         curses.wrapper(self.gui)
 
 
-manages = manage(4,10)
+manages = manage(4,14)
 manages.main()
