@@ -3,4 +3,4 @@
 
 运行截图:
 
-![](多电梯调度/screenshot.png =200x)
+<img src="多电梯调度/screenshot.png" width="50%" height="50%">
